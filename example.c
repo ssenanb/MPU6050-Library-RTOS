@@ -1,147 +1,36 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
+
 #include "main.h"
-
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 #include "MPU6050.h"
-//#include "GPS.h"
-#include "string.h"
-/* USER CODE END Includes */
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-#define BUFFER_SIZE 100
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 
-UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart2;
-
-/* USER CODE BEGIN PV */
-static uint8_t indx = 0;
-static char buffer[BUFFER_SIZE];
-uint8_t rx_byte;
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	if(huart->Instance == USART1){
-		buffer[indx++] = rx_byte;
-
-		if(rx_byte == '\n'){
-			buffer[indx] = '\0';
-			indx = 0;
-		}
-
-	HAL_UART_Receive_IT(&huart1, &rx_byte, 1);
-	}
-}
-
-void GPS_Init() {
-    indx = 0;
-    //sentence_ready = false;
-    memset(buffer, 0, BUFFER_SIZE);
-    HAL_UART_Receive_IT(&huart1, &rx_byte, 1);
-}
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
-/* USER CODE BEGIN PFP */
 
-/* USER CODE END PFP */
+MPU6050_Data_t data;
 
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
   SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
-  /* USER CODE BEGIN 2 */
-GPS_Init();
-//MPU6050_Init();
-  /* USER CODE END 2 */
+ 
+  MPU6050_Init();
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-	 //MPU6050_getAccelandGyroValue(&data);
-	 // HAL_UART_Transmit(&huart2, (uint8_t*)buffer, strlen(buffer), HAL_MAX_DELAY);
+	 MPU6050_getAccelandGyroValue(&data);
   }
-  /* USER CODE END 3 */
 }
 
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -357,3 +246,4 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
