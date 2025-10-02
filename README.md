@@ -22,7 +22,7 @@ int main(void) {
         // Now you can use data.acc_x, data.gyro_x, etc.
     }
 }
-```c
+```
 
 
 
