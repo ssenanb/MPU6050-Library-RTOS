@@ -9,8 +9,6 @@
 
 #include "RTOS_MPU6050.h"
 #include "cmsis_os.h"
-#include "math.h"
-
 
 extern I2C_HandleTypeDef hi2c1;
 
@@ -180,3 +178,4 @@ MPU6050GetStatus_t MPU6050_getAccelandGyroValue(MPU6050_Data_t *values){
 
 	return GET_SUCCESS;
 }
+
